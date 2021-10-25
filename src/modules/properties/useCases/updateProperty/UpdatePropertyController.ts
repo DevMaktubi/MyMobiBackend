@@ -17,7 +17,8 @@ class UpdatePropertyController {
                 throw new Error("Validation error");
             }
 
-            this.updatePropertyUseCase.execute(id, req.body);
+            await this.updatePropertyUseCase.execute(id, req.body);
+
             return res.status(200).send();
         } catch (err) {
             if (err.isJoi === true) {
@@ -25,7 +26,7 @@ class UpdatePropertyController {
                     error: err.message,
                 });
             }
-            return res.status(400).send(err.message);
+            return res.status(404).json({ error: err.message });
         }
     }
 }

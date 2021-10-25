@@ -7,8 +7,12 @@ class FindPropertyController {
 
     handle(req: Request, res: Response): Response {
         const { id } = req.params;
-        const property = this.findPropertyUseCase.execute(id);
-        return res.status(200).json(property);
+        try {
+            const property = this.findPropertyUseCase.execute(id);
+            return res.status(200).json(property);
+        } catch (err) {
+            return res.status(404).json({ error: "Property not found." });
+        }
     }
 }
 

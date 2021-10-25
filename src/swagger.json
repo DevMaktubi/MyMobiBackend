@@ -1,0 +1,457 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MyMobi",
+        "description": "Documentação sobre api MyMobi",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/properties": {
+            "tags": [
+                "property"
+            ],
+            "get": {
+                "summary": "Lista todos os imóveis",
+                "description": "Lista todos os imóveis",
+                "responses": {
+                    "200": {
+                        "description": "Listagem de imóveis completa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type":"object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            },
+                                            "location": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "country": {
+                                                        "type": "string"
+                                                    },
+                                                    "state": {
+                                                        "type": "string"
+                                                    },
+                                                    "city": {
+                                                        "type": "string"
+                                                    },
+                                                    "street": {
+                                                        "type": "string"
+                                                    },
+                                                    "number": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            },
+                                            "price": {
+                                                "type":"integer"
+                                            },
+                                            "rooms": {
+                                                "type":"integer"
+                                            },
+                                            "area": {
+                                                "type": "integer"
+                                            },
+                                            "images": {
+                                                "type": "array"
+                                            }
+                                        },
+                                        "example": {
+                                            "id": "df60a3bb-c829-435c-af06-e69e84f878cb",
+                                            "name": "Apartamento em Moema",
+                                            "description": "Belo apartamento aconchegante com ampla vista da cidade",
+                                            "created_at": "2021-10-25T13:39:24.128Z",
+                                            "updated_at": "2021-10-25T13:39:24.128Z",
+                                            "location": {
+                                                "country": "Brasl",
+                                                "state": "São Paulo",
+                                                "city": "Moema Pássaros",
+                                                "street": "Avenida Pavão",
+                                                "number": 130
+                                            },
+                                            "price": 10409,
+                                            "rooms": 4,
+                                            "area": 60,
+                                            "images": [
+                                                "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                                                "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                                                "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Cria um novo imóvel",
+                "description": "Cria um novo imóvel",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "type": "object",
+                                        "properties": {
+                                            "country": {
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "type": "string"
+                                            },
+                                            "city": {
+                                                "type": "string"
+                                            },
+                                            "street": {
+                                                "type": "string"
+                                            },
+                                            "number": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "price": {
+                                        "type":"integer"
+                                    },
+                                    "rooms": {
+                                        "type":"integer"
+                                    },
+                                    "area": {
+                                        "type": "integer"
+                                    },
+                                    "images": {
+                                        "type": "array"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "O imóvel foi criado"
+                    },
+                    "422": {
+                        "description": "O imóvel não foi criado. Alguma propriedade está faltando no request."
+                    }
+                }
+            }
+        },
+        "/properties/{property_id}": {
+            "tags": [
+                "property"
+            ],
+            "get": {
+                "summary": "Lista as informações de um imóvel específico",
+                "description": "Lista as informações de um imóvel específico",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id do imóvel em questão",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A busca retornou um imóvel",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "location": {
+                                            "type": "object",
+                                            "properties": {
+                                                "country": {
+                                                    "type": "string"
+                                                },
+                                                "state": {
+                                                    "type": "string"
+                                                },
+                                                "city": {
+                                                    "type": "string"
+                                                },
+                                                "street": {
+                                                    "type": "string"
+                                                },
+                                                "number": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "price": {
+                                            "type":"integer"
+                                        },
+                                        "rooms": {
+                                            "type":"integer"
+                                        },
+                                        "area": {
+                                            "type": "integer"
+                                        },
+                                        "images": {
+                                            "type": "array"
+                                        }
+                                    },
+                                    "example": {
+                                        "id": "df60a3bb-c829-435c-af06-e69e84f878cb",
+                                            "name": "Apartamento em Moema",
+                                            "description": "Belo apartamento aconchegante com ampla vista da cidade",
+                                            "created_at": "2021-10-25T13:39:24.128Z",
+                                            "updated_at": "2021-10-25T13:39:24.128Z",
+                                            "location": {
+                                                "country": "Brasl",
+                                                "state": "São Paulo",
+                                                "city": "Moema Pássaros",
+                                                "street": "Avenida Pavão",
+                                                "number": 130
+                                            },
+                                            "price": 10409,
+                                            "rooms": 4,
+                                            "area": 60,
+                                            "images": [
+                                                "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                                                "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
+                                                "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+                                            ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "A busca não retornou nenhum imóvel",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type":"object",
+                                    "properties": {
+                                        "error": "string"
+                                    },
+                                    "example": {
+                                        "error": "Property not found."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Atualiza os dados de algum imóvel",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id do imóvel em questão",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "required": false,
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "required": false,
+                                        "type": "string"
+                                    },
+                                    "location": {
+                                        "required": false,
+                                        "type": "object",
+                                        "properties": {
+                                            "country": {
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            "state": {
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            "city": {
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            "street": {
+                                                "required": false,
+                                                "type": "string"
+                                            },
+                                            "number": {
+                                                "required": false,
+                                                "type": "integer"
+                                            }
+                                        }
+                                    },
+                                    "price": {
+                                        "required": false,
+                                        "type":"integer"
+                                    },
+                                    "rooms": {
+                                        "required": false,
+                                        "type":"integer"
+                                    },
+                                    "area": {
+                                        "required": false,
+                                        "type": "integer"
+                                    },
+                                    "images": {
+                                        "required": false,
+                                        "type": "array"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "O imóvel foi atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "O imóvel não foi encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type":"object",
+                                    "properties": {
+                                        "error": "string"
+                                    },
+                                    "example": {
+                                        "error": "Property not found."
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            },
+            "delete": {
+                "summary": "Deleta um imóvel",
+                "description": "Deleta um imóvel",
+                "parameters": [
+                    {
+                        "name": "property_id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Id do imóvel em questão",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "O imóvel foi deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "O imóvel não foi encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type":"object",
+                                    "properties": {
+                                        "error": "string"
+                                    },
+                                    "example": {
+                                        "error": "Property not found."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/import": {
+            "tags": [
+                "property"
+            ],
+            "post": {
+                "summary": "Importa um arquivo CSV",
+                "description": "Importa um arquivo CSV",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "O arquivo foi importado com sucesso"
+                    },
+                    "400": {
+                        "description": "O arquivo não foi encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type":"object",
+                                    "properties": {
+                                        "error": "string"
+                                    },
+                                    "example": {
+                                        "error": "File not found."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

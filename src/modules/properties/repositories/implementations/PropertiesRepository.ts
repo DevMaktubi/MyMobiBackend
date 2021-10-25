@@ -62,6 +62,9 @@ class PropertiesRepository implements IPropertiesRepository {
         const propertyIndex = this.properties.findIndex(
             (property) => property.id === id
         );
+        if (propertyIndex === -1) {
+            throw new Error("Property not found");
+        }
         this.properties.splice(propertyIndex, 1);
     }
 
@@ -70,6 +73,9 @@ class PropertiesRepository implements IPropertiesRepository {
         const propertyIndex = this.properties.findIndex(
             (p) => p.id === propertyId
         );
+        if (propertyIndex === -1) {
+            throw new Error("Property not found");
+        }
         const oldProperty = this.properties[propertyIndex];
         if (property.location) {
             // eslint-disable-next-line no-param-reassign

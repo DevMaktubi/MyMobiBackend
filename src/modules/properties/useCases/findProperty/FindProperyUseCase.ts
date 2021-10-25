@@ -5,7 +5,11 @@ class FindProperytyUseCase {
     constructor(private propertiesRepository: PropertiesRepository) {}
 
     execute(propertyId: string): Property | undefined {
-        return this.propertiesRepository.findById(propertyId);
+        const property = this.propertiesRepository.findById(propertyId);
+        if (!property) {
+            throw new Error("Property not found");
+        }
+        return property;
     }
 }
 

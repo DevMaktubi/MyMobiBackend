@@ -8,10 +8,10 @@ class DeletePropertyController {
     async handle(req: Request, res: Response): Promise<void> {
         try {
             const { id } = req.params;
-            this.deletePropertyUseCase.execute(id);
+            await this.deletePropertyUseCase.execute(id);
             res.status(200).send();
         } catch (err) {
-            res.status(400).json({
+            res.status(404).json({
                 message: err.message || "Unexpected error.",
             });
         }
