@@ -1,10 +1,16 @@
-import { Property } from "../../model/Property";
+import { inject, injectable } from "tsyringe";
+
+import { Property } from "../../entities/Property";
 import { PropertiesRepository } from "../../repositories/implementations/PropertiesRepository";
 
+@injectable()
 class ListPropertyUseCase {
-    constructor(private propertiesRepository: PropertiesRepository) {}
+    constructor(
+        @inject("PropertiesRepository")
+        private propertiesRepository: PropertiesRepository
+    ) {}
 
-    execute(): Property[] {
+    async execute(): Promise<Property[]> {
         return this.propertiesRepository.findAll();
     }
 }

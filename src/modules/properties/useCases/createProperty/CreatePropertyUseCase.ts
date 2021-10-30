@@ -1,8 +1,14 @@
+import { inject, injectable } from "tsyringe";
+
 import { ICreatePropertyDTO } from "../../repositories/IPropertiesRepository";
 
+@injectable()
 class CreatePropertyUseCase {
-    constructor(private propertiesRepository) {}
-    execute({
+    constructor(
+        @inject("PropertiesRepository")
+        private propertiesRepository
+    ) {}
+    async execute({
         name,
         description,
         location,
@@ -11,7 +17,7 @@ class CreatePropertyUseCase {
         rooms,
         images,
     }: ICreatePropertyDTO) {
-        const propertyExists = this.propertiesRepository.findByName(name);
+        const propertyExists = await this.propertiesRepository.findByName(name);
 
         if (propertyExists) {
             throw new Error("Propriedade já existe.");

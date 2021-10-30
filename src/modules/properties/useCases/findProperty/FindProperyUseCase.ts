@@ -1,11 +1,17 @@
-import { Property } from "../../model/Property";
+import { inject, injectable } from "tsyringe";
+
+import { Property } from "../../entities/Property";
 import { PropertiesRepository } from "../../repositories/implementations/PropertiesRepository";
 
+@injectable()
 class FindProperytyUseCase {
-    constructor(private propertiesRepository: PropertiesRepository) {}
+    constructor(
+        @inject("PropertiesRepository")
+        private propertiesRepository: PropertiesRepository
+    ) {}
 
-    execute(propertyId: string): Property | undefined {
-        const property = this.propertiesRepository.findById(propertyId);
+    async execute(propertyId: string): Promise<Property> {
+        const property = await this.propertiesRepository.findById(propertyId);
         if (!property) {
             throw new Error("Property not found");
         }

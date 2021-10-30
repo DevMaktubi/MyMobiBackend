@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
+import { container } from "tsyringe";
 
 import { updatePropertySchema } from "../../services/UpdatePropertySchema";
 import { UpdatePropertyUseCase } from "./UpdatePropertyUseCase";
 
 class UpdatePropertyController {
-    constructor(private updatePropertyUseCase: UpdatePropertyUseCase) {}
     async handle(req: Request, res: Response): Promise<Response> {
+        const updatePropertyUseCase = container.resolve(UpdatePropertyUseCase);
         const { id } = req.params;
         try {
             // Validação do schema pode ser um middleware para manter SRP
@@ -17,7 +18,7 @@ class UpdatePropertyController {
                 throw new Error("Validation error");
             }
 
-            await this.updatePropertyUseCase.execute(id, req.body);
+            await updatePropertyUseCase.execute(id, req.body);
 
             return res.status(200).send();
         } catch (err) {

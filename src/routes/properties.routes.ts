@@ -1,38 +1,37 @@
 import { Router } from "express";
 import multer from "multer";
 
-import { createPropertyController } from "../modules/properties/useCases/createProperty";
-import { deletePropertyController } from "../modules/properties/useCases/deleteProperty";
-import { findPropertyController } from "../modules/properties/useCases/findProperty";
-import { importPropertyController } from "../modules/properties/useCases/importProperty";
-import { listPropertyController } from "../modules/properties/useCases/listProperty";
-import { updatePropertyController } from "../modules/properties/useCases/updateProperty";
+import { CreatePropertyController } from "../modules/properties/useCases/createProperty/CreatePropertyController";
+import { DeletePropertyController } from "../modules/properties/useCases/deleteProperty/DeletePropertyController";
+import { FindPropertyController } from "../modules/properties/useCases/findProperty/FindPropertyController";
+import { ImportPropertyController } from "../modules/properties/useCases/importProperty/ImportPropertyController";
+import { ListPropertyController } from "../modules/properties/useCases/listProperty/ListPropertyController";
+import { UpdatePropertyController } from "../modules/properties/useCases/updateProperty/UpdatePropertyController";
 
 const propertiesRouter = Router();
 
 const upload = multer({ dest: "tmp/" });
 
-propertiesRouter.get("/", (req, res) => {
-    return listPropertyController.handle(req, res);
-});
+const createPropertyController = new CreatePropertyController();
+const deletePropertyController = new DeletePropertyController();
+const findPropertyController = new FindPropertyController();
+const importPropertyController = new ImportPropertyController();
+const updatePropertyController = new UpdatePropertyController();
+const listPropertyController = new ListPropertyController();
 
-propertiesRouter.get("/:id", (req, res) => {
-    return findPropertyController.handle(req, res);
-});
+propertiesRouter.get("/", listPropertyController.handle);
 
-propertiesRouter.post("/", (req, res) => {
-    return createPropertyController.handle(req, res);
-});
+propertiesRouter.get("/:id", findPropertyController.handle);
 
-propertiesRouter.post("/import", upload.single("file"), (req, res) => {
-    return importPropertyController.handle(req, res);
-});
+propertiesRouter.post("/", createPropertyController.handle);
 
-propertiesRouter.delete("/:id", (req, res) => {
-    return deletePropertyController.handle(req, res);
-});
+propertiesRouter.post(
+    "/import",
+    upload.single("file"),
+    importPropertyController.handle
+);
 
-propertiesRouter.put("/:id", (req, res) => {
-    return updatePropertyController.handle(req, res);
-});
+propertiesRouter.delete("/:id", deletePropertyController.handle);
+
+propertiesRouter.put("/:id", updatePropertyController.handle);
 export { propertiesRouter };

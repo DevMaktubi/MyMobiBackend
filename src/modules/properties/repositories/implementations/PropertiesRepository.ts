@@ -1,23 +1,17 @@
-import { Property } from "../../model/Property";
+import { getRepository, Repository } from "typeorm";
+
+import { Property } from "../../entities/Property";
 import {
     ICreatePropertyDTO,
     IPropertiesRepository,
+    IUpdatePropertyDTO,
 } from "../IPropertiesRepository";
 
 class PropertiesRepository implements IPropertiesRepository {
-    private properties: Property[] = [];
+    repository: Repository<Property>;
 
-    private static INSTANCE: PropertiesRepository;
-
-    private constructor() {
-        this.properties = [];
-    }
-
-    public static getInstance(): PropertiesRepository {
-        if (!PropertiesRepository.INSTANCE) {
-            PropertiesRepository.INSTANCE = new PropertiesRepository();
-        }
-        return PropertiesRepository.INSTANCE;
+    constructor() {
+        this.repository = getRepository(Property);
     }
 
     // Criar propriedade
@@ -30,61 +24,104 @@ class PropertiesRepository implements IPropertiesRepository {
         area,
         images,
     }: ICreatePropertyDTO): Promise<void> {
-        const newProperty = new Property({
+        const { country, state, city, street, number } = location;
+        const newProperty = await this.repository.create({
             name,
             description,
-            location,
+            country,
+            state,
+            city,
+            street,
+            number,
             price,
             rooms,
             area,
             images,
         });
-        this.properties.push(newProperty);
+        await this.repository.save(newProperty);
     }
 
     // Listar todas as propriedades
-    findAll(): Property[] {
-        return this.properties;
+    async findAll(): Promise<Property[]> {
+        const properties = await this.repository.find();
+        return properties;
     }
     // Encontrar propriedade pelo nome
-    findByName(name: string): Property {
-        const property = this.properties.find(
-            (property) => property.name === name
-        );
+    async findByName(name: string): Promise<Property> {
+        const property = await this.repository.findOne({ name });
         return property;
     }
     // Encontrar propriedade pelo id
-    findById(id: string): Property {
-        const property = this.properties.find((property) => property.id === id);
+    async findById(id: string): Promise<Property> {
+        const property = await this.repository.findOne(id);
         return property;
     }
     async delete(id: string): Promise<void> {
-        const propertyIndex = this.properties.findIndex(
-            (property) => property.id === id
-        );
-        if (propertyIndex === -1) {
-            throw new Error("Property not found");
-        }
-        this.properties.splice(propertyIndex, 1);
+        await this.repository.delete(id);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    update(propertyId: string, property: any): void {
-        const propertyIndex = this.properties.findIndex(
-            (p) => p.id === propertyId
-        );
-        if (propertyIndex === -1) {
-            throw new Error("Property not found");
-        }
-        const oldProperty = this.properties[propertyIndex];
+    async update(
+        propertyId: string,
+        property: IUpdatePropertyDTO
+    ): Promise<void> {
+        const oldProperty = await this.repository.findOne(propertyId);
+        // if (property.location) {
+        //     // eslint-disable-next-line no-param-reassign
+        //     const oldLocation = {
+        //         country: oldProperty.country,
+        //         state: oldProperty.state,
+        //         city: oldProperty.city,
+        //         street: oldProperty.street,
+        //         number: oldProperty.number,
+        //     };
+        //     const newLocation = {
+        //         country: property.location.country,
+        //         state: property.location.state,
+        //         city: property.location.city,
+        //         street: property.location.street,
+        //         number: property.location.number,
+        //     };
+        //     // eslint-disable-next-line no-param-reassign
+        //     property.location = {
+        //         ...oldLocation,
+        //         ...newLocation,
+        //     };
+        // }
+        const { name, description, price, rooms, area, images } = property;
         if (property.location) {
-            // eslint-disable-next-line no-param-reassign
-            property.location = {
-                ...oldProperty.location,
-                ...property.location,
+            const { country, state, city, street, number } = property.location;
+            const newProperty = {
+                name: name || oldProperty.name,
+                description: description || oldProperty.description,
+                country: country || oldProperty.country,
+                state: state || oldProperty.state,
+                city: city || oldProperty.city,
+                street: street || oldProperty.street,
+                number: number || oldProperty.number,
+                price: price || oldProperty.price,
+                rooms: rooms || oldProperty.rooms,
+                area: area || oldProperty.area,
+                images,
             };
+
+            await this.repository.update(propertyId, newProperty);
+        } else {
+            const newProperty = {
+                name: name || oldProperty.name,
+                description: description || oldProperty.description,
+                country: oldProperty.country,
+                state: oldProperty.state,
+                city: oldProperty.city,
+                street: oldProperty.street,
+                number: oldProperty.number,
+                price: price || oldProperty.price,
+                rooms: rooms || oldProperty.rooms,
+                area: area || oldProperty.area,
+                images,
+            };
+            await this.repository.update(propertyId, newProperty);
         }
-        this.properties[propertyIndex] = { ...oldProperty, ...property };
     }
 }
 

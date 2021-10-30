@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
+import { container } from "tsyringe";
 
 import { ICreatePropertyDTO } from "../../repositories/IPropertiesRepository";
 import { createPropertySchema } from "../../services/CreatePropertySchema";
 import { CreatePropertyUseCase } from "./CreatePropertyUseCase";
 
 class CreatePropertyController {
-    constructor(private createPropertyUseCase: CreatePropertyUseCase) {}
-
     async handle(request: Request, response: Response): Promise<Response> {
+        const createPropertyUseCase = container.resolve(CreatePropertyUseCase);
         try {
             const {
                 name,
@@ -33,7 +33,7 @@ class CreatePropertyController {
                 throw new Error("Validation error");
             }
 
-            this.createPropertyUseCase.execute({
+            await createPropertyUseCase.execute({
                 name,
                 description,
                 location,

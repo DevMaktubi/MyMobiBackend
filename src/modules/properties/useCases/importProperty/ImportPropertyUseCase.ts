@@ -1,5 +1,6 @@
 import csvParse from "csv-parse";
 import fs from "fs";
+import { inject, injectable } from "tsyringe";
 
 import { PropertiesRepository } from "../../repositories/implementations/PropertiesRepository";
 
@@ -18,9 +19,12 @@ interface IImportProperty {
     area: number;
     images: string[];
 }
-
+@injectable()
 class ImportPropertyUseCase {
-    constructor(private propertiesRepository: PropertiesRepository) {}
+    constructor(
+        @inject("PropertiesRepository")
+        private propertiesRepository: PropertiesRepository
+    ) {}
 
     private async loadProperties(
         file: Express.Multer.File

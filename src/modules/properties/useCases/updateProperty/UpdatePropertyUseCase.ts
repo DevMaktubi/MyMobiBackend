@@ -1,7 +1,13 @@
+import { inject, injectable } from "tsyringe";
+
 import { PropertiesRepository } from "../../repositories/implementations/PropertiesRepository";
 
+@injectable()
 class UpdatePropertyUseCase {
-    constructor(private propertiesRepository: PropertiesRepository) {}
+    constructor(
+        @inject("PropertiesRepository")
+        private propertiesRepository: PropertiesRepository
+    ) {}
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     async execute(propertyId: string, property: any): Promise<void> {
